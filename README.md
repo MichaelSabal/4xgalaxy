@@ -1,4 +1,5 @@
-##What is 4xGalaxy? (from the temporary landing page at http://msabal.net/4xgalaxy)
+## What is 4xGalaxy? 
+(from the temporary landing page at http://msabal.net/4xgalaxy)
 As the name suggests, this is a classic 4x game: explore, expand, exploit, exterminate. What makes this game somewhat different, is that this game is much more about working together with other players than trying to wipe them off the map. For every human player, there is also a computer player. The game master also has the option to add additional computer players if the human players are becoming too strong. As more players are added to the game, and as existing players continue to expand their territories, the map itself expands, introducing new stars to explore and exploit.
 
 Many of the technologies and resources in the game are created by the players themselves. These can then be exchanged for other resources that may be of value. While the game is rather slow to start, focusing on research and economics, the time will come when you must defend yourself against the attacks of other players, both human and computer. The ultimate goal of the game is to keep the computer players from having the upper hand.
