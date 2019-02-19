@@ -1,0 +1,57 @@
+body {
+	background-image: url("../img/grass.jpg");
+}
+.maincontent {
+	margin: 70px;
+	border: 5px solid #666666;
+	background-color: #D0FFD0;
+	color: #300030;
+	-moz-opacity: 0.9;
+	opacity: 0.9;
+	filter: alpha(opacity=90);
+	padding: 10px;
+}
+.menuitem {
+	color: #FFFFFF;
+	padding: 5px;
+	border: 2px solid #844444;
+	background-color: #00007F;
+	margin: 1px;
+	display: inline;
+	font: 11px verdana, arial, sans-serif;
+}
+.selected {
+	background-color: #0000DD;
+}
+.problem {
+	padding: 5px;
+	border: 2px solid #FFFF00;
+	color: #FFFF00;
+	background-color: #7F0000;
+	margin: 1px;
+	display: inline;
+	font: 16px verdana, arial, sans-serif;	
+}
+.copyright {
+	padding: 5px;
+	border: 2px solid #FFDDDD;
+	background-color: #000000;
+	color: #FFFFFF;
+	-moz-opacity: 1.0;
+	opacity: 1.0;
+	margin: 70px;
+	font-size: 0.8em;
+}
+/* https://css-tricks.com/float-labels-css/ */
+#registrationForm {
+	width: 85%;
+}
+#registrationForm label{
+	padding-right: 10px;
+	float: left;
+	width: 15%;
+}
+#registrationForm input select {
+	width: 20%;
+	float: right;
+}

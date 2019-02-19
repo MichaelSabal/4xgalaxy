@@ -1,0 +1,35 @@
+body {
+	background-color: #000000;
+	color: #FFFFFF;
+}
+.menuitem {
+	padding: 5px;
+	border: 2px solid #844444;
+	background-color: #00007F;
+	margin: 1px;
+	display: inline;
+	font: 11px verdana, arial, sans-serif;
+}
+.selected {
+	background-color: #0000DD;
+}
+.problem {
+	padding: 5px;
+	border: 2px solid #FFFF00;
+	color: #FFFF00;
+	background-color: #7F0000;
+	margin: 1px;
+	display: inline;
+	font: 16px verdana, arial, sans-serif;	
+}
+
+.gmdashblock {
+	padding: 5px;
+	margin: 5px;
+	display: inline;
+}
+.gmdashblock label {
+	display: inline-block;
+	min-width: 125px;
+	color: #00AA3D;
+}
