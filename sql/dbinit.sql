@@ -2,7 +2,7 @@
 
 --GRANT ALL ON alliancegame.* TO '4xgalaxy'@'localhost' IDENTIFIED BY '#A4%s6&d8';
 
-USE alliancegame;
+USE msabalne_alliancegame;
 
 CREATE TABLE GalaxySettings (
 	settingID char(40) not null primary key
@@ -63,8 +63,8 @@ CREATE TABLE HeliosphereObjectTypes (
 	,parentObjectType int
 	,minRadius decimal(19,8) not null
 	,maxRadius decimal(19,8) not null
-	,minOrbit decimal(11,8) not null
-	,maxOrbit decimal(11,8) not null
+	,minOrbit decimal(19,8) not null
+	,maxOrbit decimal(19,8) not null
 	,minPeriod decimal(11,4) not null
 	,maxPeriod decimal(11,4) not null
 );
@@ -289,22 +289,6 @@ CREATE TABLE NationResources (
 	,resourceID int not null
 	,amountOnHand numeric(40,4) not null
 );
-
-/* Added version 0.03b 
-UPDATE GalaxySettings SET settingValue='0.03a' WHERE settingID='Version';
-ALTER TABLE Players
-ADD COLUMN playerStatus int not null;
-*/
-CREATE TABLE PlayerStatusReference (
-	playerStatus int not null auto_increment primary key
-	,playerStatusDescription varchar(50) not null
-);
-INSERT INTO PlayerStatusReference VALUES
-(1,'Active')
-,(2,'Pending')
-,(3,'Vacation')
-,(4,'Suspended')
-,(5,'Blocked');
 
 /*
 CREATE PROCEDURE Reset()
