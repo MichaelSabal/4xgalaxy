@@ -8,7 +8,7 @@ CREATE TABLE GalaxySettings (
 	settingID char(40) not null primary key
 	,settingValue varchar(128) not null
 );
-INSERT INTO GalaxySettings (settingID,settingValue) VALUES 
+INSERT INTO GalaxySettings (settingID,settingValue) VALUES
 ('Version','0.03a'),
 ('GalaxyWidth','100'),
 ('GalaxyHeight','100'),
@@ -21,7 +21,7 @@ CREATE TABLE EventTypes (
 	,eventTypeDescription varchar(256) not null
 );
 INSERT INTO EventTypes (eventType,eventTypeDescription) VALUES
-(1,'Connection event'),	
+(1,'Connection event'),
 (2,'Cron event'),
 (3,'Message sent'),
 (4,'Player action'),
@@ -79,9 +79,9 @@ INSERT INTO HeliosphereObjectTypes VALUES
 -- Theta equals how far into the revolution the object is, in degrees
 CREATE TABLE HeliosphereObjects (
 	heliosphereObject int not null auto_increment primary key
-	,heliosphereObjectType int not null 
+	,heliosphereObjectType int not null
 	,heliosphereObjectRandomName varchar(128) not null
-	,heliosphereObjectAssignedName varchar(128) 
+	,heliosphereObjectAssignedName varchar(128)
 	,parentObject int
 	,starID int
 	,habitable char(1) not null default 'N'
@@ -98,8 +98,9 @@ CREATE TABLE HeliosphereObjects (
 );
 INSERT INTO HeliosphereObjects (heliosphereObject,heliosphereObjectType,heliosphereObjectRandomName,apogee,perigee,radius,period) VALUES
 	(1,1,'Galactic Core',0,0,0,0);
-	
+
 -- Note: If running a MySQL database older than 5.5.3, secret should be changed to varbinary(128)
+-- PlayerType: H=Human, C=Computer, A=Admin, M=Moderator
 CREATE TABLE Players (
 	playerID int not null auto_increment primary key
 	,playerType char(1) not null
@@ -113,8 +114,6 @@ CREATE TABLE Players (
 	,firstStar int not null
 	,dateJoined datetime not null
 	,lastLogin datetime not null
-	,salt1 varchar(12)
-	,salt2 varchar(12)
 	,secret varchar(128)
 );
 
@@ -124,7 +123,7 @@ CREATE TABLE SurfaceTypes (
 	,surfaceTypeDescription varchar(80) not null
 	,habitable char(1) not null default 'N'
 );
-INSERT INTO SurfaceTypes VALUES 
+INSERT INTO SurfaceTypes VALUES
 ('GAS','Gas','Stars or gas giant planets','N'),
 ('ICE','Ice','Comets, icy moons, and dwarf planets','Y'),
 ('ROK','Rock','Most habitable planets, moons, and asteroids','Y'),
@@ -137,7 +136,7 @@ INSERT INTO SurfaceTypes VALUES
 UPDATE GalaxySettings SET settingValue='0.02e' WHERE settingID='Version';
 ALTER TABLE SurfaceTypes
 ADD COLUMN SurfaceTypeName varchar(20) not null;
-INSERT INTO GalaxySettings (settingID,settingValue) VALUES 
+INSERT INTO GalaxySettings (settingID,settingValue) VALUES
 ('LastCRON',current_time());
 UPDATE SurfaceTypes SET SurfaceTypeName='Gas' WHERE SurfaceType='GAS';
 UPDATE SurfaceTypes SET SurfaceTypeName='Ice' WHERE SurfaceType='ICE';
@@ -181,7 +180,7 @@ CREATE TABLE ResourceTypeUsages (
 	resourceTypeUsageID char(5) not null primary key
 	,resourceTypeUsageDescription varchar(128) not null
 );
--- Note on RAW: Everything can be used as a raw material for something else. 
+-- Note on RAW: Everything can be used as a raw material for something else.
 -- So the RAW type usage only applies when no other usage makes sense.
 INSERT INTO ResourceTypeUsages VALUES
 ('RAW','No use besides as a raw material'),
@@ -217,13 +216,13 @@ INSERT INTO ResourceTypes (resourceTypeDescription,primaryUsage,secondUsage) VAL
 ('Alloy','RAW',null);
 
 -- ResourceSource may be 'P' for player created or 'S' for system created.
--- Players may create their own resources and develop a backstory to convince other 
+-- Players may create their own resources and develop a backstory to convince other
 -- 	players to purchase their creations.
 -- ResourceCreation may be 'N' for natural (consumes no other resources), or 'M' for manufactured (consumes other resources)
 -- TechnologyRequired is a composite field of TechnologyIDs that must be available on the planet for this resource to be gathered/made
 -- Population is how many people can be sustained with a single unit of this resource
 -- RenewalRate is how many units of a resource are added per year
--- DecayRate is how many years before a resource returns to its raw materials (if manufactured) 
+-- DecayRate is how many years before a resource returns to its raw materials (if manufactured)
 -- 	or how many years before a resource becomes unusable (if natural).
 CREATE TABLE Resources (
 	resourceID int not null auto_increment primary key
@@ -253,7 +252,7 @@ CREATE TABLE ResourceConsumption (
 	,usesResourceID int not null
 	,amountPerOne numeric(11,3) not null
 );
-INSERT INTO ResourceConsumption VALUES 
+INSERT INTO ResourceConsumption VALUES
 ((SELECT resourceID FROM Resources WHERE resourceName='Ale'),(SELECT resourceID FROM Resources WHERE resourceName='Grain'),1),
 ((SELECT resourceID FROM Resources WHERE resourceName='Ale'),(SELECT resourceID FROM Resources WHERE resourceName='Water'),2);
 

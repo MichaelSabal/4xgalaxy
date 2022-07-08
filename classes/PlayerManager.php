@@ -38,17 +38,17 @@ class PlayerManager {
 		} else return -1;
 	}
 	public function countAlmostExpiredPlayers() {
-		$result = $this->dbconn->query("SELECT COUNT(1) as cnt FROM Players 
-			WHERE lastLogin BETWEEN DATE_SUB(CURRENT_DATE(),INTERVAL 6 MONTH) 
+		$result = $this->dbconn->query("SELECT COUNT(1) as cnt FROM Players
+			WHERE lastLogin BETWEEN DATE_SUB(CURRENT_DATE(),INTERVAL 6 MONTH)
 			AND DATE_SUB(CURRENT_DATE(),INTERVAL 3 MONTH);");
 		if ($result!==false) {
 			$row = $result->fetch_assoc();
 			return $row['cnt'];
-		} else return -1;		
+		} else return -1;
 	}
 	public function addHumanPlayer() {
 		// assumes $_POST contains the necessary information
-		
+
 	}
 	public function addComputerPlayer() {
 		$ai = new Player($this->dbconn);
@@ -56,8 +56,9 @@ class PlayerManager {
 		$ai->setDateJoined();
 		$ai->setLastLogin();
 		$ai->setBirthday(new DateTime());
-		$id = $ai->save();
-		if ($id > 0) {
+		$result = $ai->save();
+		if ($result) {
+			$id = $ai->getID();
 			$starmgr = new StarManager($this->dbconn);
 			$starid = $starmgr->assignFirstStar($id,'C');
 			if ($starid>0) {
@@ -67,9 +68,9 @@ class PlayerManager {
 		}
 	}
 	public function listPlayers() {
-		$result = $this->dbconn->query("SELECT playerID, playerType, firstName, lastName, birthday, 
+		$result = $this->dbconn->query("SELECT playerID, playerType, firstName, lastName, birthday,
 			email, alias, ipAddress4, ipAddress6, firstStar, dateJoined, lastLogin,
-			(SELECT COUNT(1) FROM Nations n WHERE n.playerID=p.playerID) as nationCount 
+			(SELECT COUNT(1) FROM Nations n WHERE n.playerID=p.playerID) as nationCount
 			FROM Players p;");
 		if ($result!==false) {
 			echo '<TABLE id="PlayerList">';
