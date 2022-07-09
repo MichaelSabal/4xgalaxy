@@ -99,6 +99,17 @@ CREATE TABLE HeliosphereObjects (
 INSERT INTO HeliosphereObjects (heliosphereObject,heliosphereObjectType,heliosphereObjectRandomName,apogee,perigee,radius,period) VALUES
 	(1,1,'Galactic Core',0,0,0,0);
 
+CREATE TABLE PlayerStatusReference (
+	playerStatus int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	playerStatusDescription varchar(50) NOT NULL,
+);
+INSERT INTO playerstatusreference (playerStatus, playerStatusDescription) VALUES
+(1, 'Active'),
+(2, 'Pending'),
+(3, 'Vacation'),
+(4, 'Suspended'),
+(5, 'Blocked');
+
 -- Note: If running a MySQL database older than 5.5.3, secret should be changed to varbinary(128)
 -- PlayerType: H=Human, C=Computer, A=Admin, M=Moderator
 CREATE TABLE Players (
@@ -115,6 +126,7 @@ CREATE TABLE Players (
 	,dateJoined datetime not null
 	,lastLogin datetime not null
 	,secret varchar(128)
+	,playerStatus int not null default 1
 );
 
 CREATE TABLE SurfaceTypes (

@@ -14,8 +14,9 @@ class Player {
 	private $ipaddress6 = '';
 	private $firstStar = -1;
 	private $secret = '';
+	private $playerStatus = 1;
 	private $columnList = 'playerType,email,alias,birthday,
-				dateJoined,lastLogin,firstName,lastName,ipaddress4,ipaddress6,firstStar';
+				dateJoined,lastLogin,firstName,lastName,ipaddress4,ipaddress6,firstStar,playerStatus';
 	public function __construct($conn,$id=-1) {
 		if (get_class($conn)=='mysqli') $this->dbconn = $conn;
 		if ($id > 0) {
@@ -48,14 +49,15 @@ class Player {
 			$this->ipaddress4 = $row['ipaddress4'];
 			$this->ipaddress6 = $row['ipaddress6'];
 			$this->firstStar = $row['firstStar'];
+			$this->playerStatus = $row['playerStatus'];
 		}
 	}
 	private function insert(): bool {
 		$q = 'INSERT INTO Players (playerType,email,alias,birthday,dateJoined,lastLogin,
-			firstName,lastName,ipaddress4,ipaddress6,firstStar,secret)
-			VALUES (?,?,?,?,?,?,?,?,?,?,?,?);';
+			firstName,lastName,ipaddress4,ipaddress6,firstStar,secret,playerStatus)
+			VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);';
 		$stmt = $this->dbconn->prepare($q);
-		$stmt->bind_param('ssssssssssis',$p1,$p2,$p3,$p4,$p5,$p6,$p7,$p8,$p9,$p10,$p11,$p12);
+		$stmt->bind_param('ssssssssssisi',$p1,$p2,$p3,$p4,$p5,$p6,$p7,$p8,$p9,$p10,$p11,$p12,$p13);
 		$p1 = $this->playerType;
 		$p2 = $this->email;
 		$p3 = $this->alias;
@@ -68,6 +70,7 @@ class Player {
 		$p10 = $this->ipaddress6;
 		$p11 = $this->firstStar;
 		$p12 = password_hash($this->secret,PASSWORD_DEFAULT);
+		$p13 = $this->playerStatus;
 		$result = $stmt->execute();
 		if ($result!==false) {
 			$this->playerID = $this->dbconn->insert_id;
@@ -89,14 +92,25 @@ class Player {
 			ipaddress4=?,
 			ipaddress6=?,
 			firstStar=?,
-			secret=?
+			secret=?,
+			playerStatus=?
 			WHERE playerID=?;';
 		$stmt = $this->dbconn->prepare($q);
-		$stmt->bind_param('ssssssssssisi',$this->playerType,$this->email,$this->alias,
-			$this->birthday->format('Y-m-d'),$this->dateJoined->format('Y-m-d'),
-			$this->lastLogin->format('Y-m-d H:i:s'),$this->firstName,$this->lastName,
-			$this->ipaddress4,$this->ipaddress6,$this->firstStar,
-			password_hash($this->secret,PASSWORD_DEFAULT),$this->playerID);
+		$stmt->bind_param('ssssssssssisii',$p1,$p2,$p3,$p4,$p5,$p6,$p7,$p8,$p9,$p10,$p11,$p12,$p13,$id);
+		$p1 = $this->playerType;
+		$p2 = $this->email;
+		$p3 = $this->alias;
+		$p4 = $this->birthday->format('Y-m-d');
+		$p5 = $this->dateJoined->format('Y-m-d');
+		$p6 = $this->lastLogin->format('Y-m-d H:i:s');
+		$p7 = $this->firstName;
+		$p8 = $this->lastName;
+		$p9 = $this->ipaddress4;
+		$p10 = $this->ipaddress6;
+		$p11 = $this->firstStar;
+		$p12 = password_hash($this->secret,PASSWORD_DEFAULT);
+		$p13 = $this->playerStatus;
+		$id = $this->playerID;
 		$result = $stmt->execute();
 		if ($result!==false && $this->dbconn->affected_rows > 0)
 			return true;
