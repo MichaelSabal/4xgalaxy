@@ -111,7 +111,8 @@ class StarManager {
 			// Assign player to Star's habitable planet.
 			$planetq = "SELECT HeliosphereObject FROM HeliosphereObjects WHERE heliosphereObjectType=3 AND starID=? AND habitable='Y';";
 			$planets = $this->dbconn->prepare($planetq);
-			$planets->bind_param("i",$star->getID());
+			$planets->bind_param("i",$id);
+			$id = $star->getID();
 			if ($planets->execute()) {
 				$planets->bind_result($planetID);
 				$planets->fetch();

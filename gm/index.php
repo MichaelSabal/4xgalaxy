@@ -11,7 +11,7 @@ if (isset($_SESSION['gmview'])) $view=$_SESSION['gmview'];
 <LINK rel="stylesheet" type="text/css" href="gm.css" />
 </HEAD>
 <BODY onLoad="onClickMenuItem(1);">
-<SCRIPT src="../js/jquery-1.11.2.min.js"></SCRIPT>
+<SCRIPT src="../js/jquery-3.6.0.min.js"></SCRIPT>
 <SCRIPT>
 function onClickMenuItem(view) {
 	var ajax = $.post("changeview.php",{gmview:view, jquery:"jquery"});

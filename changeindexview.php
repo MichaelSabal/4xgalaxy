@@ -44,9 +44,9 @@ There is certainly much to be done to make this game playable.  Here is a workin
 <LI style="color: #007F00;">Assign a population to the nation, sum all nations and assign to the planet.</LI>
 <LI style="color: #007F00;">Make a planet view for the gm dashboard</LI>
 <LI>Give essential resources and technologies to the new nation.</LI>
-<LI>Offer new human player form</LI>
+<LI style="color: #007F00;">Offer new human player form</LI>
 <LI>Create human player screens</LI>
-<LI>Create CRON.php
+<LI style="color: #007F00;">Create CRON.php
 <OL>
 <LI>Adjust HO thetas</LI>
 <LI>Adjust NationResources</LI>
@@ -100,7 +100,6 @@ function showUserLogin() {
 	echo $rtn;
 }
 function registerUser(MySQLi $dbconn) {
-	var_dump($_POST);
 	$firstname = $_POST['firstname'] ?? null;
 	$lastname = $_POST['lastname'] ?? null;
 	$alias = $_POST['alias'] ?? null;

@@ -9,6 +9,11 @@ body {
 	margin: 1px;
 	display: inline;
 	font: 11px verdana, arial, sans-serif;
+	cursor: pointer;
+}
+td[onClick] {
+	color: #00FFFF;
+	cursor: pointer;
 }
 .selected {
 	background-color: #0000DD;
