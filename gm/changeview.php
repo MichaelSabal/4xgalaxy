@@ -11,7 +11,7 @@ function showDashboard($dbconn) {
 }
 function showStarList($dbconn) {
 	$sm = new StarManager($dbconn);
-	$sm->listStars();
+	echo $sm->listStars();
 }
 function showPlayerList($dbconn) {
 	$pm = new PlayerManager($dbconn);

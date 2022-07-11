@@ -123,7 +123,7 @@ class StarManager {
 			return $list[0];
 		} else return -1;
 	}
-	public function listStars($starID=-1) {
+	public function listStars(int $starID=-1, int $playerID=-1) {
 		$q = 
 		"SELECT s.starID,s.starRandomName,s.starAssignedName,s.locationX,s.locationY,s.radius,s.starColor,s.playerID,
 			pl.firstName,pl.lastName,pl.playerType,ho.habitable,ho.temperature,ho.population,
@@ -131,41 +131,44 @@ class StarManager {
 			FROM Stars s 
 			LEFT OUTER JOIN Players pl ON s.playerID=pl.playerID 
 			JOIN HeliosphereObjects ho ON s.starID=ho.starID and ho.heliosphereObjectType=2";
-		if (!is_numeric($starID) || $starID==-1) $q .= ';';
-		else $q .= " WHERE s.starID=$starID;";
+		if ($starID > 0) $q .= " WHERE s.starID=$starID;";
+		elseif ($playerID > 0) $q .= "WHERE s.playerID=$playerID;";
+		else $q .= ";";
 		$result = $this->dbconn->query($q);
 		if ($result!=false) {
-			echo '<TABLE id="StarList">';
-			echo '<TR><TH>Star ID</TH><TH>Star Random Name</TH><TH>Star Assigned Name</TH><TH>Location</TH><TH>Radius</TH><TH>Temperature</TH><TH>Star Type</TH>
+			$html = '<TABLE id="StarList">';
+			$html .= '<TR><TH>Star ID</TH><TH>Star Random Name</TH><TH>Star Assigned Name</TH><TH>Location</TH><TH>Radius</TH><TH>Temperature</TH><TH>Star Type</TH>
 				<TH>Habitable</TH><TH>Population</TH><TH># Planets</TH><TH>Owned by</TH></TR>';
 			while ($row=$result->fetch_assoc()) {
-				echo "<TR>";
-				echo "<TD onClick=\"onClickStarID({$row['starID']});\">{$row['starID']}</TD>";
-				echo "<TD onClick=\"onClickStarID({$row['starID']});\">{$row['starRandomName']}</TD>";
-				echo "<TD onClick=\"onClickStarID({$row['starID']});\">{$row['starAssignedName']}</TD>";
-				echo "<TD>{$row['locationX']}, {$row['locationY']}</TD>";
-				echo "<TD>{$row['radius']} A.U.</TD>";
-				echo "<TD>{$row['temperature']} K</TD>";
-				echo "<TD>".Star::getColorName($row['starColor'])."</TD>";
-				echo "<TD>{$row['habitable']}</TD>";
-				echo "<TD>{$row['population']}</TD>";
-				echo "<TD onClick=\"onClickStarID({$row['starID']});\">{$row['planets']}</TD>";
-				echo "<TD";
+				$html .= "<TR>";
+				$html .= "<TD onClick=\"onClickStarID({$row['starID']});\">{$row['starID']}</TD>";
+				$html .= "<TD onClick=\"onClickStarID({$row['starID']});\">{$row['starRandomName']}</TD>";
+				$html .= "<TD onClick=\"onClickStarID({$row['starID']});\">{$row['starAssignedName']}</TD>";
+				$html .= "<TD>{$row['locationX']}, {$row['locationY']}</TD>";
+				$html .= "<TD>{$row['radius']} A.U.</TD>";
+				$html .= "<TD>{$row['temperature']} K</TD>";
+				$html .= "<TD>".Star::getColorName($row['starColor'])."</TD>";
+				$html .= "<TD>{$row['habitable']}</TD>";
+				$html .= "<TD>{$row['population']}</TD>";
+				$html .= "<TD onClick=\"onClickStarID({$row['starID']});\">{$row['planets']}</TD>";
+				$html .= "<TD";
 				$playerID = $row['playerID'];
 				if ($playerID < 1) {
-					echo ">Unowned";
+					$html .= ">Unowned";
 				} else {
-					echo " onClick=\"onClickPlayerID({$row['playerID']});\">";
-					if ($row['playerType']=='C') echo 'Computer player ';
-					elseif ($row['playerType']=='H') echo 'Human player ';
-					echo $row['firstName'].' '.$row['lastName'];
-					echo " (ID {$row['playerID']})";
+					$html .= " onClick=\"onClickPlayerID({$row['playerID']});\">";
+					if ($row['playerType']=='C') $html .= 'Computer player ';
+					elseif ($row['playerType']=='H') $html .= 'Human player ';
+					$html .= $row['firstName'].' '.$row['lastName'];
+					$html .= " (ID {$row['playerID']})";
 				}
-				echo "</TD>";
-				echo "</TR>";
+				$html .= "</TD>";
+				$html .= "</TR>";
 			}
-			echo "</TABLE>";
+			$html .= "</TABLE>";
+			return $html;
 		}
+		return "";
 	}
 }
 ?>

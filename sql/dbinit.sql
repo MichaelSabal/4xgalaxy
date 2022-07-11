@@ -9,7 +9,7 @@ CREATE TABLE GalaxySettings (
 	,settingValue varchar(128) not null
 );
 INSERT INTO GalaxySettings (settingID,settingValue) VALUES
-('Version','0.03a'),
+('Version','0.04a'),
 ('GalaxyWidth','100'),
 ('GalaxyHeight','100'),
 ('MaxStars','250'),
