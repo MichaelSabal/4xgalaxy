@@ -101,9 +101,9 @@ INSERT INTO HeliosphereObjects (heliosphereObject,heliosphereObjectType,heliosph
 
 CREATE TABLE PlayerStatusReference (
 	playerStatus int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	playerStatusDescription varchar(50) NOT NULL,
+	playerStatusDescription varchar(50) NOT NULL
 );
-INSERT INTO playerstatusreference (playerStatus, playerStatusDescription) VALUES
+INSERT INTO PlayerStatusReference (playerStatus, playerStatusDescription) VALUES
 (1, 'Active'),
 (2, 'Pending'),
 (3, 'Vacation'),

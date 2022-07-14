@@ -31,6 +31,7 @@ class Player {
 		} else {
 			$stmt = $this->dbconn->prepare("SELECT {$this->columnList}
 				FROM Players WHERE playerID=?;");
+				if ($stmt===false) echo $this->dbconn->error;
 			$stmt->bind_param('i',$id);
 			$result = $stmt->execute();
 			if ($result!==false) $result = $stmt->get_result();
@@ -92,11 +93,10 @@ class Player {
 			ipaddress4=?,
 			ipaddress6=?,
 			firstStar=?,
-			secret=?,
 			playerStatus=?
 			WHERE playerID=?;';
 		$stmt = $this->dbconn->prepare($q);
-		$stmt->bind_param('ssssssssssisii',$p1,$p2,$p3,$p4,$p5,$p6,$p7,$p8,$p9,$p10,$p11,$p12,$p13,$id);
+		$stmt->bind_param('ssssssssssiii',$p1,$p2,$p3,$p4,$p5,$p6,$p7,$p8,$p9,$p10,$p11,$p13,$id);
 		$p1 = $this->playerType;
 		$p2 = $this->email;
 		$p3 = $this->alias;
@@ -108,7 +108,6 @@ class Player {
 		$p9 = $this->ipaddress4;
 		$p10 = $this->ipaddress6;
 		$p11 = $this->firstStar;
-		$p12 = password_hash($this->secret,PASSWORD_DEFAULT);
 		$p13 = $this->playerStatus;
 		$id = $this->playerID;
 		$result = $stmt->execute();
@@ -224,6 +223,7 @@ class Player {
 			$id = $this->playerID;
 			$result = $stmt->execute();
 			if ($result!==false) {
+				$stmt->store_result();
 				$stmt->bind_result($storedsecret);
 				if ($stmt->fetch() && password_verify($secret,$storedsecret)) $rtn = true;
 			}
@@ -238,11 +238,16 @@ class Player {
 		$stmt->bind_param('s',$p1);
 		$p1 = $email;
 		$result = $stmt->execute();
-		if ($result===false) return -1;
-		$stmt->bind_result($id);
-		if (!$stmt->fetch()) {
+		if ($result===false) {
+			$stmt->close();
 			return -1;
 		}
+		$stmt->bind_result($id);
+		if (!$stmt->fetch()) {
+			$stmt->close();
+			return -1;
+		}
+		$stmt->close();
 		$this->load($id);
 		return $id;
 	}

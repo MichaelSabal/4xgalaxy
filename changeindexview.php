@@ -155,6 +155,8 @@ function registerUser(MySQLi $dbconn) {
 			$player->setFirstStar($starid);
 			$player->save();
 		}
+		$_SESSION['userid'] = $id;
+		$_SESSION['loggedInSince'] = new DateTime();
 		userDashboard($dbconn);
 	} else {
 		echo "<DIV class='$error'>The user could not be created.</DIV>".showNewUserRegistration();
@@ -162,7 +164,15 @@ function registerUser(MySQLi $dbconn) {
 }
 function userDashboard(MySQLi $dbconn) {
 	$_SESSION['indexview'] = 5;
-	showLandingPage();
+	if (!isset($_SESSION['userid'],$_SESSION['loggedInSince']) ||
+		((new DateTime())->format('U') - $_SESSION['loggedInSince']->format('U') > 43100) ) {
+			unset($_SESSION['userid']);
+			unset($_SESSION['loggedInSince']);
+			return showUserLogin();
+		}
+	$player = new Player($dbconn, $_SESSION['userid']);
+	$dashboard = new PlayerDashboard($dbconn, $player);
+	$dashboard->render();
 }
 function doesLoginExist(MySQLi $dbconn) {
 	$_SESSION['indexview'] = 2;
@@ -184,7 +194,27 @@ function doesLoginExist(MySQLi $dbconn) {
 	echo 'fail';
 }
 function authenticateUser(MySQLi $dbconn) {
-
+	// TODO: Remove dev code (fail reasons)
+	$email = $_POST['username'];
+	if (!isValidEmail($email)) {
+		echo 'fail - not valid email';
+		return;
+	}
+	$player = new Player($dbconn);
+	$id = $player->lookupByEmail($_POST['username']);
+	if ($id < 1) {
+		echo 'fail - email doesnt exist';
+		return;
+	}
+	if ($player->validateSecret($_POST['paw'])) {
+		$_SESSION['userid'] = $id;
+		$_SESSION['loggedInSince'] = new DateTime();
+		$player->setLastLogin();
+		$player->save();
+		echo 'success';
+	} else {
+		echo 'fail - bad pw '.password_hash($_POST['paw'],PASSWORD_DEFAULT);
+	}
 }
 function jquery() {
 	include_once('../4xgalaxy.php');	// Database config file

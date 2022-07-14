@@ -18,18 +18,21 @@ function showPlayerList($dbconn) {
 	$pm->listPlayers();
 }
 function showMap($dbconn) {
-	
+
 }
 function showEventLog($dbconn) {
-	
+
 }
 function showEconomy($dbconn) {
-	
+
 }
 function showStarSystem($dbconn,$starID) {
 	if (!is_numeric($starID) || $starID < 1) return;
-	$sm = new PlanetManager($dbconn);
-	$sm->listObjects($starID);
+	$pm = new PlanetManager($dbconn);
+	$sm = new StarManager($dbconn);
+	echo $sm->listStars($starID);
+	echo "<BR /><BR />";
+	echo $pm->listObjects($starID);
 }
 function showNationsInSystem($dbconn,$starID,$hoID) {
 	if (!is_numeric($starID) || !is_numeric($hoID)) return;
@@ -60,7 +63,7 @@ function jquery() {
 		if ($dbconn===false) {
 			echo '<div class="problem">The database is offline!</div>';
 			return;
-		} 
+		}
 		$starID = -1;
 		$playerID = -1;
 		if (isset($_POST['starID'])) $starID = $_POST['starID'];

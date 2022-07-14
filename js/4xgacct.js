@@ -74,5 +74,16 @@ function onSubmitRegister() {
 	});
 }
 function onSubmitLogin() {
-
+	var data = {
+		indexview: 7
+		,jquery:"jquery"
+		,username:$("#username").val()
+		,paw:$("#paw").val()
+	};
+	$.post("changeindexview.php",data,function(response) {
+		if (response=="success") $.post("changeindexview.php",{indexview:5,jquery:"jquery"},function(data) {
+			$("#pagecontent").empty().append(data);
+		});
+		else alert("Authentication failed.");
+	});
 }

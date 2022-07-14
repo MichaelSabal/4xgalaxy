@@ -1,6 +1,18 @@
 body {
 	background-image: url("../img/grass.jpg");
 }
+.header {
+	color: #300030;
+	margin-left: 70px;
+	margin-right: 70px;
+	margin-top: 10px;
+	-moz-opacity: 0.9;
+	opacity: 0.9;
+	filter: alpha(opacity=90);
+	padding: 10px;
+	border: 5px solid #666666;
+	background-color: #D0FFD0;
+}
 .maincontent {
 	margin: 70px;
 	border: 5px solid #666666;

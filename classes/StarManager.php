@@ -2,6 +2,7 @@
 class StarManager {
 	private $dbconn = null;
 	private $starArray = array();
+	private $starIDs = [];
 	private $starCount = 0;
 	public function __construct($conn) {
 		if (get_class($conn)=='mysqli') $this->dbconn = $conn;
@@ -9,6 +10,9 @@ class StarManager {
 		if ($this->starCount==0) {
 			$this->addStars(100);
 		}
+	}
+	public function getStarIDs() {
+		return $this->starIDs;
 	}
 	public function echoColorListAsLabel() {
 		$q = "SELECT starColor,COUNT(1) as cnt FROM Stars GROUP BY starColor;";
@@ -37,10 +41,10 @@ class StarManager {
 			WHERE starColor IN ('OR','YG','RD');");
 		if ($result===false) return -1;
 		$row = $result->fetch_assoc();
-		return $row['cnt'];		
+		return $row['cnt'];
 	}
 	public function getHumanCount() {
-		$result = $this->dbconn->query("SELECT COUNT(1) as cnt FROM Stars s 
+		$result = $this->dbconn->query("SELECT COUNT(1) as cnt FROM Stars s
 			JOIN Players p ON s.playerID=p.playerID
 			WHERE p.playerType IN ('A','M','H');");
 		if ($result===false) return '0';
@@ -48,7 +52,7 @@ class StarManager {
 		return $row['cnt'];
 	}
 	public function getAICount() {
-		$result = $this->dbconn->query("SELECT COUNT(1) as cnt FROM Stars s 
+		$result = $this->dbconn->query("SELECT COUNT(1) as cnt FROM Stars s
 			JOIN Players p ON s.playerID=p.playerID
 			WHERE p.playerType='C';");
 		if ($result===false) return '0';
@@ -71,7 +75,7 @@ class StarManager {
 			while (!$locok) {
 				$x = rand(1000*(0+($ms/2)),($gs[0]-($ms/2))*1000)/1000;
 				$y = rand(1000*(0+($ms/2)),($gs[1]-($ms/2))*1000)/1000;
-				$result = $this->dbconn->query("SELECT COUNT(1) as cnt FROM Stars 
+				$result = $this->dbconn->query("SELECT COUNT(1) as cnt FROM Stars
 					WHERE sqrt(power(locationX-$x,2)+power(locationY-$y,2))<$ms;");
 				if ($result!==false) {
 					$row = $result->fetch_assoc();
@@ -87,7 +91,7 @@ class StarManager {
 	}
 	public function assignFirstStar($playerid,$playertype) {
 		if (!is_numeric($playerid) || $playerid < 0) return -1;
-		$result = $this->dbconn->query("SELECT starID FROM Stars s LEFT OUTER JOIN Players p ON s.playerID=p.playerID 
+		$result = $this->dbconn->query("SELECT starID FROM Stars s LEFT OUTER JOIN Players p ON s.playerID=p.playerID
 			WHERE p.playerID is null AND starColor IN ('OR','YG','RD');");
 		if ($result!==false) {
 			$list = array();
@@ -124,15 +128,16 @@ class StarManager {
 		} else return -1;
 	}
 	public function listStars(int $starID=-1, int $playerID=-1) {
-		$q = 
+		$this->starArray = [];
+		$q =
 		"SELECT s.starID,s.starRandomName,s.starAssignedName,s.locationX,s.locationY,s.radius,s.starColor,s.playerID,
 			pl.firstName,pl.lastName,pl.playerType,ho.habitable,ho.temperature,ho.population,
 			(SELECT COUNT(1) FROM HeliosphereObjects hp WHERE hp.starID=s.starID AND hp.heliosphereObjectType=3) AS planets
-			FROM Stars s 
-			LEFT OUTER JOIN Players pl ON s.playerID=pl.playerID 
+			FROM Stars s
+			LEFT OUTER JOIN Players pl ON s.playerID=pl.playerID
 			JOIN HeliosphereObjects ho ON s.starID=ho.starID and ho.heliosphereObjectType=2";
 		if ($starID > 0) $q .= " WHERE s.starID=$starID;";
-		elseif ($playerID > 0) $q .= "WHERE s.playerID=$playerID;";
+		elseif ($playerID > 0) $q .= " WHERE s.playerID=$playerID;";
 		else $q .= ";";
 		$result = $this->dbconn->query($q);
 		if ($result!=false) {
@@ -140,7 +145,8 @@ class StarManager {
 			$html .= '<TR><TH>Star ID</TH><TH>Star Random Name</TH><TH>Star Assigned Name</TH><TH>Location</TH><TH>Radius</TH><TH>Temperature</TH><TH>Star Type</TH>
 				<TH>Habitable</TH><TH>Population</TH><TH># Planets</TH><TH>Owned by</TH></TR>';
 			while ($row=$result->fetch_assoc()) {
-				$html .= "<TR>";
+				$this->starIDs[] = $row['starID'];
+				$html .= "<TR id=\"starData{$row['starID']}\">";
 				$html .= "<TD onClick=\"onClickStarID({$row['starID']});\">{$row['starID']}</TD>";
 				$html .= "<TD onClick=\"onClickStarID({$row['starID']});\">{$row['starRandomName']}</TD>";
 				$html .= "<TD onClick=\"onClickStarID({$row['starID']});\">{$row['starAssignedName']}</TD>";
@@ -168,7 +174,7 @@ class StarManager {
 			$html .= "</TABLE>";
 			return $html;
 		}
-		return "";
+		return $this->dbconn->error;
 	}
 }
 ?>
